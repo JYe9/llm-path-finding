@@ -1,65 +1,106 @@
 Abstract
 ------
-Path planning is a fundamental scientific problem in robotics and autonomous navigation, requiring the derivation of efficient routes from starting to destination points while avoiding obstacles. Traditional algorithms like A* and its variants are capable of ensuring path validity but suffer from significant computational and memory inefficiencies as the state space grows. Conversely, large language models (LLMs) excel in broader environmental analysis through contextual understanding, providing global insights into environments. However, they fall short in detailed spatial and temporal reasoning, often leading to invalid or inefficient routes. In this work, we propose **LLM-A***, an new LLM based route planning method that synergistically combines the precise pathfinding capabilities of A* with the global reasoning capability of LLMs. This hybrid approach aims to enhance pathfinding efficiency in terms of time and space complexity while maintaining the integrity of path validity, especially in large-scale scenarios. By integrating the strengths of both methodologies, **LLM-A*** addresses the computational and memory limitations of conventional algorithms without compromising on the validity required for effective pathfinding.
+
+The increasing demand for autonomous navigation systems has opened new possibilities for optimizing decision-making in dynamic and complex environments. One of the fundamental challenges in this domain is path planning, which involves computing efficient, obstacle-free routes from a starting point to a destination. Traditional path-finding algorithms such as **A*** and **Rapidly-exploring Random Trees (RRT)** have long been employed to solve this problem, ensuring valid paths. However, as the state space expands, these methods encounter substantial computational and memory inefficiencies, highlighting the need for more scalable solutions. Despite recent progress, there remains a critical gap in integrating broader environmental reasoning into path-planning strategies without sacrificing precision.
+
+To address this gap, we propose two hybrid methods: **LLM-A*** and **LLM-RRT** that combine the precise path-finding strengths of A* and RRT with the global reasoning abilities of Large Language Models (LLMs). While **A*** and **RRT** excel at detailed navigation in complex spaces, they struggle with efficiency in large-scale environments. On the other hand, LLMs offer contextual environmental insights but lack the precision required for exact navigation. By incorporating LLMs to approximate the initial direction for sampling, we demonstrate a significant reduction in the computational iterations needed to find efficient paths.
+
+The results, derived from simulations and real-world experiments, show that our hybrid approach improves path-finding efficiency in both time and space complexity, while maintaining path validity even in expansive environments. This novel integration of LLMs with traditional algorithms enhances decision-making accuracy and robustness, moving the field of autonomous navigation forward by paving the way for more intelligent and reliable autonomous systems.
 
 Algorithm
 ------
-<br/>
-<p align="center"> <img width="1000" src="https://github.com/SilinMeng0510/llm-astar/assets/89226819/75a63ffa-249a-48ca-b500-c90cae64d3d3">
 
+<br/>
+<p align="center"> <img width="1000" src="./docs/static/images/llm_astar_algorithm.png">
+
+<br/>
+<p align="center"> <img width="1000" src="./docs/static/images/llm_rrt_algorithm.png">
 
 Directory Structure
 ------
-    .
-    └── dataset
-    └── env
-        └── search
-    └── model
-        ├── chatgpt
-        └── llama3
-    └── pather
-        ├── astar
-        └── llm_astar
-    └── utils
+
+    ./llm-path-finding
+    ├── dataset
+    │   ├── dataset.py
+    │   └── __init__.py
+    ├── env
+    │   ├── __init__.py
+    │   └── search
+    │       ├── env.py
+    │       ├── __init__.py
+    │       └── plotting.py
+    ├── __init__.py
+    ├── model
+    │   ├── chatgpt.py
+    │   ├── __init__.py
+    │   └── llama3.py
+    ├── pather
+    │   ├── a_star
+    │   │   ├── a_star.py
+    │   │   └── __init__.py
+    │   ├── __init__.py
+    │   ├── llm_a_star
+    │   │   ├── __init__.py
+    │   │   ├── llm_a_star.py
+    │   │   └── prompt.py
+    │   ├── llm_rrt
+    │   │   ├── __init__.py
+    │   │   ├── llm_rrt.py
+    │   │   └── prompt.py
+    │   └── rrt
+    │       ├── __init__.py
+    │       └── rrt.py
+    ├── utils
+    │   ├── filter.py
+    │   ├── __init__.py
+    │   └── utils.py
+    └── version.py
 
 ## ⏬ Installation
 ```bash
-pip install llm-astar
+pip install -r requirements.txt 
 ```
 
 ## 🚀 Quick Start
-```python
-import openai
-openai.api_key = "YOUR API KEY"
+Create a '.env' file in the project directory to store the OpenAI API key:
 
-from llmastar.pather import AStar, LLMAStar
-query = {"start": [5, 5], "goal": [27, 15], "size": [51, 31],
-        "horizontal_barriers": [[10, 0, 25], [15, 30, 50]],
-        "vertical_barriers": [[25, 10, 22]],
-        "range_x": [0, 51], "range_y": [0, 31]}
-astar = AStar().searching(query=query, filepath='astar.png')
-llm = LLMAStar(llm='gpt', prompt='standard').searching(query=query, filepath='llm.png')
+```bash
+OPENAI_API_KEY = sk-xxxxxxxxxxxxxxxxxxx
+```
+
+Then run:
+```bash
+python3 main.py
 ```
 
 ## 📝 Citation
 If you found this work helpful, please consider citing it using the following:
 ```
-@article{meng2024llm,
-  title={LLM-A*: Large Language Model Enhanced Incremental Heuristic Search on Path Planning},
-  author={Meng, Silin and Wang, Yiwei and Yang, Cheng-Fu and Peng, Nanyun and Chang, Kai-Wei},
-  journal={arXiv preprint arXiv:2407.02511},
-  year={2024}
+@misc{Jianlin2024,
+  author = {Jianlin Ye},
+  title = {llm-path-finding},
+  year = {2024},
+  publisher = {GitHub},
+  journal = {GitHub repository},
+  howpublished = {\url{https://github.com/JYe9/llm-path-finding}},
+  commit = {16865d524e27ff72ea04c28980f2d5be2c456477}
 }
 ```
 
 ## 💫 Showcase
 <br/>
-<p align="center"> <img width="1000" src="https://github.com/SilinMeng0510/llm-astar/assets/89226819/36ff049f-4e4e-453b-9454-2d6441ad79c0">
+<p align="center"> <img width="1000" src="./output/astar.png">
 
+<br/>
+<p align="center"> <img width="1000" src="./output/llm_astar.png">
+
+<br/>
+<p align="center"> <img width="1000" src="./output/rrt.png">
+
+<br/>
+<p align="center"> <img width="1000" src="./output/llm_rrt.png">
 
 ## 🪪 License
 MIT. Check `LICENSE`.
-
-[![Downloads](https://static.pepy.tech/badge/llm-astar)](https://pepy.tech/project/llm-astar) ![PyPI - Version](https://img.shields.io/pypi/v/llm-astar)
 
 
